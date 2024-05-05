@@ -12,7 +12,6 @@ import (
 	"github.com/go-musicfox/go-musicfox/internal/configs"
 	"github.com/go-musicfox/go-musicfox/internal/types"
 	"github.com/go-musicfox/go-musicfox/internal/ui"
-	"github.com/go-musicfox/go-musicfox/internal/web"
 	"github.com/go-musicfox/go-musicfox/utils"
 )
 
@@ -26,8 +25,6 @@ func NewPlayerCommand() *gcli.Command {
 }
 
 func runPlayer(_ *gcli.Command, _ []string) error {
-
-	web.Headler()
 
 	if GlobalOptions.PProfMode {
 		utils.Go(func() {

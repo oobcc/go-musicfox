@@ -714,8 +714,6 @@ func (p *Player) getLyric(songId int64) {
 		}
 	}
 
-	configs.ConfigRegistry.Test = true
-
 	if configs.ConfigRegistry.Main.ShowLyricTrans {
 		if lrc, err := jsonparser.GetString(response, "tlyric", "lyric"); err == nil && lrc != "" {
 			if file, err := lyric.ReadTranslateLRC(strings.NewReader(lrc)); err == nil {

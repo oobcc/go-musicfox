@@ -18,13 +18,18 @@ func getMusicMessage(w http.ResponseWriter, r *http.Request) {
 
 	icon := ""
 
+	if Status.ArtistName == "" {
+		fmt.Fprint(w)
+		return
+	}
+
 	if Status.IsPlay {
 		icon = "▶"
 	} else {
-		icon = "||"
+		icon = "⏸"
 	}
 
-	fmt.Fprintf(w, "%s %s %s %s", icon, Status.SongName, Status.ArtistName, Status.Lyrics)
+	fmt.Fprintf(w, "%s %s | %s", icon, Status.SongName, Status.Lyrics)
 
 }
 

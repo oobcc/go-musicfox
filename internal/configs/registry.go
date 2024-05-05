@@ -23,7 +23,6 @@ type Registry struct {
 	UNM           UNMOptions
 	Player        PlayerOptions
 	GlobalHotkeys map[string]string
-	Test          bool
 }
 
 func (r *Registry) FillToModelOpts(opts *model.Options) {

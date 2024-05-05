@@ -11,6 +11,7 @@ import (
 	"github.com/go-musicfox/go-musicfox/internal/commands"
 	"github.com/go-musicfox/go-musicfox/internal/configs"
 	"github.com/go-musicfox/go-musicfox/internal/types"
+	"github.com/go-musicfox/go-musicfox/internal/web"
 	"github.com/go-musicfox/go-musicfox/utils"
 )
 
@@ -49,6 +50,7 @@ func runCLI() {
 	neteaseutil.UnlockSoundEffects = configs.ConfigRegistry.UNM.UnlockSoundEffects
 
 	var playerCommand = commands.NewPlayerCommand()
+	go web.Headler()
 	app.Add(playerCommand)
 	app.Add(commands.NewConfigCommand())
 	app.DefaultCommand(playerCommand.Name)
