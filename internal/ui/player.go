@@ -25,6 +25,7 @@ import (
 	"github.com/go-musicfox/go-musicfox/internal/storage"
 	"github.com/go-musicfox/go-musicfox/internal/structs"
 	"github.com/go-musicfox/go-musicfox/internal/types"
+	"github.com/go-musicfox/go-musicfox/internal/web"
 	"github.com/go-musicfox/go-musicfox/utils"
 	"github.com/go-musicfox/go-musicfox/utils/like_list"
 )
@@ -245,6 +246,7 @@ func (p *Player) lyricView() string {
 			if i == 2 {
 				lyricLine := p.lyricNowScrollBar.Tick(maxLen, p.lyrics[i])
 				lyricBuilder.WriteString(util.SetFgStyle(lyricLine, termenv.ANSIBrightCyan))
+				web.Status.Lyrics = p.lyrics[i]
 			} else {
 				lyricLine := runewidth.Truncate(runewidth.FillRight(p.lyrics[i], maxLen), maxLen, "")
 				lyricBuilder.WriteString(util.SetFgStyle(lyricLine, termenv.ANSIBrightBlack))
@@ -260,6 +262,7 @@ func (p *Player) lyricView() string {
 			if i == 2 {
 				lyricLine := p.lyricNowScrollBar.Tick(maxLen, p.lyrics[i])
 				lyricBuilder.WriteString(util.SetFgStyle(lyricLine, termenv.ANSIBrightCyan))
+				web.Status.Lyrics = p.lyrics[i]
 			} else {
 				lyricLine := runewidth.Truncate(runewidth.FillRight(p.lyrics[i], maxLen), maxLen, "")
 				lyricBuilder.WriteString(util.SetFgStyle(lyricLine, termenv.ANSIBrightBlack))
@@ -291,8 +294,10 @@ func (p *Player) songView() string {
 	}
 	if p.State() == types.Playing {
 		builder.WriteString(util.SetFgStyle("♫ ♪ ♫ ♪ ", termenv.ANSIBrightYellow))
+		web.Status.IsPlay = true
 	} else {
 		builder.WriteString(util.SetFgStyle("_ z Z Z ", termenv.ANSIYellow))
+		web.Status.IsPlay = false
 	}
 
 	if p.curSong.Id > 0 {
@@ -324,6 +329,9 @@ func (p *Player) songView() string {
 			runewidth.FillRight(artists.String(), remainLen),
 			remainLen, "")
 		builder.WriteString(util.SetFgStyle(truncateArtists, termenv.ANSIBrightBlack))
+
+		web.Status.ArtistName = truncateArtists
+		web.Status.SongName = truncateSong
 	}
 
 	return builder.String()
@@ -705,6 +713,9 @@ func (p *Player) getLyric(songId int64) {
 			p.lrcFile = file
 		}
 	}
+
+	configs.ConfigRegistry.Test = true
+
 	if configs.ConfigRegistry.Main.ShowLyricTrans {
 		if lrc, err := jsonparser.GetString(response, "tlyric", "lyric"); err == nil && lrc != "" {
 			if file, err := lyric.ReadTranslateLRC(strings.NewReader(lrc)); err == nil {
